@@ -1,18 +1,39 @@
-const multer = require('multer');
+const app = require("./app");
+const connectDatabase = require("./db/database");
 
-
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Define your upload folder
-    },
-    filename: function(req, file, cb) {
-      const uniqueSuffix =  Date.now() + '-' + Math.round.apply(Math.random() * 1e9);
-       // Define a unique filename
-       const filename = file.originalname.split(".")[0];
-       cb(null,filename + "-" + uniqueSuffix + ".png"); // Define
-    },
+// Handling uncaught Exception when setting up backend server
+process.on("uncaughtException", (err) => {
+    console.log(`Error: ${err.message}`);
+    console.log(`shutting down the server for handling uncaught exception`);
   });
   
-  // Initialize upload object
-exports.upload = multer({ storage: storage });
+
+  // config
+if (process.env.NODE_ENV !== "PRODUCTION") {
+    require("dotenv").config({
+      path: "config/.env",
+    });
+};
+
+// connect db
+connectDatabase();
+
+
+// create server
+const server = app.listen(process.env.PORT, () => {
+    console.log(
+      `Server is running on http://localhost:${process.env.PORT}`
+    );
+  });
+
+
+  // unhandled promise rejection(explain error handling when setting up server as you code)
+  process.on("unhandledRejection", (err) => {
+    console.error(`Unhandled Rejection: ${err.message}`);
+    console.log("Shutting down the server due to unhandled promise rejection.");
+    
+    server.close(() => {
+      process.exit(1); // Exit with failure code
+    });
+  });
+  
