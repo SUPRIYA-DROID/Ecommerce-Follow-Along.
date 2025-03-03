@@ -162,3 +162,8 @@ In this milestone, We focused on Validation and Store Product Details Using Expr
 - Create a Product with name, descriptions, price and Image URL
 - Validates input before storing data in MongoDB
 - RESTful POST endpoint to add products
+
+## Milestone 11: Displaying all products from Database
+In this milestone, we focused on sending and receiving product data between the backend and frontend, and dynamically displaying the product information using React components.
+
+Creating an API Endpoint to send product data Receive data on the frontend Dynamically display product data
